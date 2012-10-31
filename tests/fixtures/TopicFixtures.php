@@ -70,6 +70,9 @@ class TopicFixtures extends AbstractFixtures
 
         $oTopic->setTextHash(md5($oTopic->getType() . $oTopic->getTextSource() . $oTopic->getTitle()));
         $oTopic->setTags($sTags);
+        // @todo refact this
+        $oTopic->_setValidateScenario('topic');
+        $oTopic->_Validate();
 
         $this->oEngine->Topic_AddTopic($oTopic);
 
