@@ -22,7 +22,7 @@ Feature: LiveStreet standart features
 
     @mink:selenium2
       Scenario: See User Profile
-        Given I am on "/profile/Golfer/"
-        Then I should see "Sergey Doryba"
-        Then I should see "... Sergey Doryba profile description"
+        Given I am on "/profile/user_first/"
+        Then I should see "UserFirst FullName"
+        Then I should see "... UserFirst profile description"
         Then I wait "5000"
