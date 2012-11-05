@@ -60,10 +60,19 @@ class BaseFeatureContext extends MinkContext
     /**
      * @Given /^I am activated plugin "([^"]*)"$/
      */
-    public function ActivatedPlugin($plugin)
+    public function ActivatedPlugin($sPlugin)
     {
         $pluginActivation =  new LoadFixtures();
-        $pluginActivation->activationPlugin($plugin);
+        $pluginActivation->activationPlugin($sPlugin);
+    }
+
+    /**
+     * @Given /^I am deactivate plugin "([^"]*)"$/
+     */
+    public function DeactivatedPlugin($sPlugin)
+    {
+        $pluginActivation =  new LoadFixtures();
+        $pluginActivation->deactivatePlugin($sPlugin);
     }
 
     /**
@@ -72,6 +81,20 @@ class BaseFeatureContext extends MinkContext
     public function iWait($time_wait)
     {
         $this->getSession()->wait($time_wait);
+    }
+
+
+    /**
+     * @Then /^I want to login administrator$/
+     */
+    public function iWantToLoginAdministrator()
+    {
+        // Заполняем форму
+        $this->getSession()->getPage()->findById("login")->setValue("admin@admin.adm");
+        $this->getSession()->getPage()->findById("password")->setValue("qwerty");
+
+        // Сабмитим форму
+        $this->pressButton("login-form-submit");
     }
 
 }
