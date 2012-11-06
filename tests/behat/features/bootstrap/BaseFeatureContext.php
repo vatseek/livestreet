@@ -34,6 +34,11 @@ class BaseFeatureContext extends BehatContext
         return self::$fixturesLoader;
     }
 
+    public function getMinkContext()
+    {
+        return $this->getMainContext();
+    }
+
     /**
      * Purge DB and load fixtures before running each test
      *
@@ -80,7 +85,7 @@ class BaseFeatureContext extends BehatContext
      */
     public function iWait($time_wait)
     {
-        $this->getSession()->wait($time_wait);
+        $this->getMinkContext()->getSession()->wait($time_wait);
     }
 
 
@@ -90,8 +95,8 @@ class BaseFeatureContext extends BehatContext
     public function iWantToLoginAdministrator()
     {
         // Заполняем форму
-        $this->getSession()->getPage()->findById("login")->setValue("admin@admin.adm");
-        $this->getSession()->getPage()->findById("password")->setValue("qwerty");
+        $this->getMinkContext()->getSession()->getPage()->findById("login")->setValue("admin@admin.adm");
+        $this->getMinkContext()->getSession()->getPage()->findById("password")->setValue("qwerty");
 
         // Сабмитим форму
         $this->pressButton("login-form-submit");
