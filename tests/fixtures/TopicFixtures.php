@@ -5,6 +5,7 @@ require_once(realpath((dirname(__FILE__)) . "/../AbstractFixtures.php"));
 class TopicFixtures extends AbstractFixtures
 {
 
+    protected $aActivePlugins = array();
     public static function getOrder()
     {
         return 2;
@@ -49,6 +50,8 @@ class TopicFixtures extends AbstractFixtures
      */
     private function _createTopic($iBlogId, $iUserId, $sTitle, $sText, $sTags, $sDate)
     {
+        $this->aActivePlugins = $this->oEngine->Plugin_GetActivePlugins();
+
         $oTopic = Engine::GetEntity('Topic');
         /* @var $oTopic ModuleTopic_EntityTopic */
         $oTopic->setBlogId($iBlogId);
@@ -70,7 +73,10 @@ class TopicFixtures extends AbstractFixtures
 
         $oTopic->setTextHash(md5($oTopic->getType() . $oTopic->getTextSource() . $oTopic->getTitle()));
         $oTopic->setTags($sTags);
-
+        //with active plugin l10n added a field topic_lang
+        if (in_array('l10n', $this->aActivePlugins)) {
+             $oTopic->setTopicLang(Config::Get('lang.current'));
+        }
         // @todo refact this
         $oTopic->_setValidateScenario('topic');
         $oTopic->_Validate();
