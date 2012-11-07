@@ -3,26 +3,40 @@ Feature: LiveStreet standart features
 
   Scenario: See main page
     Given I am on homepage
-     When I press "Войти"
-     Then the response status code should be 200
+    Then the response status code should be 200
 
-  Scenario: See Colective Blog
+    Then I should see "Sony MicroVault Mach USB 3.0 flash drive"
+    Then I should see "Blogger's name user_first"
+
+    Then I should see "iPad 3 rumored to come this March with quad-core chip and 4G LTE "
+    Then I should see "Toshiba unveils 13.3-inch AT330 Android ICS 4.0 tablet"
+    Then I should see "Gadgets"
+
+  Scenario: See colective blog
     Given I am on "/blog/gadgets"
+    Then the response status code should be 200
+
     Then I should see "Gadgets"
     Then I should see "Offers latest gadget reviews"
 
-  Scenario: See list of blogs
+  Scenario: See list of all blogs
     Given I am on "/blogs/"
-    Then I should see "Gadgets"
+    Then the response status code should be 200
 
-  Scenario: See All Topic
+    Then I should see "Gadgets"
+    Then I should see "user_first"
+
+  Scenario: See all new topics
     Given I am on "/index/newall/"
+    Then the response status code should be 200
+
+    Then I should see "Sony MicroVault Mach USB 3.0 flash drive"
     Then I should see "iPad 3 rumored to come this March with quad-core chip and 4G LTE "
     Then I should see "Toshiba unveils 13.3-inch AT330 Android ICS 4.0 tablet"
 
-    @mink:selenium2
-      Scenario: See User Profile
-        Given I am on "/profile/user_first/"
-        Then I should see "UserFirst FullName"
-        Then I should see "... UserFirst profile description"
-        Then I wait "5000"
+  Scenario: See user profile
+    Given I am on "/profile/user_first/"
+    Then the response status code should be 200
+
+    Then I should see "user_first"
+    Then I should see "... UserFirst profile description"
