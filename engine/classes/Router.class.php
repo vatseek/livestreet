@@ -95,6 +95,30 @@ class Router extends LsObject {
 	 */
 	static protected $oInstance=null;
 
+    /*     * *********************** Plugin L10n *************************** */
+    static protected $sLang = null;
+
+    /**
+     * Возвращает язык сайта (если он указан в URL)
+     *
+     * @return string|null
+     */
+    static public function getLang() {
+        return self::$sLang;
+    }
+
+    /**
+     * Задает язык сайта
+     *
+     * @param string $sLang
+     * @return void
+     */
+    static public function setLang($sLang = null) {
+        self::$sLang = $sLang;
+    }
+
+    /*     * **************************************************************** */
+
 	/**
 	 * Делает возможным только один экземпляр этого класса
 	 *
@@ -165,10 +189,25 @@ class Router extends LsObject {
 		$sReq=preg_replace("/\/+/",'/',$_SERVER['REQUEST_URI']);
 		$sReq=preg_replace("/^\/(.*)\/?$/U",'\\1',$sReq);
 		$sReq=preg_replace("/^(.*)\?.*$/U",'\\1',$sReq);
-		/**
-		 * Формируем $sPathWebCurrent ДО применения реврайтов
-		 */
-		self::$sPathWebCurrent=Config::Get('path.root.web')."/".join('/',$this->GetRequestArray($sReq));
+		/*         * *********************** Plugin L10n *************************** */
+        $aRequestUrl = $this->GetRequestArray($sReq);
+
+        /**
+         * Формируем $sPathWebCurrent ДО применения реврайтов
+         */
+        // self::$sPathWebCurrent=Config::Get('path.root.web')."/".join('/',$this->GetRequestArray($sReq));
+        self::$sPathWebCurrent = Config::Get('path.root.web') . "/" . join('/', $aRequestUrl);
+
+        if (isset($aRequestUrl[0]) && is_array(Config::Get('plugin.l10n.allowed_langs'))
+            && Engine::getInstance()->PluginL10n_L10n_IsAllowedLangAlias($aRequestUrl[0])) {
+
+            $this->setLang(array_shift($aRequestUrl));
+        }
+
+        // Rebuild URL without lang var
+        $sReq = join('/', $aRequestUrl);
+        unset($aRequestUrl);
+        /*         * **************************************************************** */
 		return $sReq;
 	}
 	/**
@@ -300,7 +339,7 @@ class Router extends LsObject {
 		} elseif (self::$sAction===null) {
 			self::$sAction=$this->aConfigRoute['config']['action_default'];
 		} else {
-			//Если не находим нужного класса то отправляем на страницу ошибки			
+			//Если не находим нужного класса то отправляем на страницу ошибки
 			self::$sAction=$this->aConfigRoute['config']['action_not_found'];
 			self::$sActionEvent='404';
 		}
@@ -451,7 +490,7 @@ class Router extends LsObject {
 	 * @param  string $action	Экшен
 	 * @return string
 	 */
-	static public function GetPath($action) {
+	static public function GetPath($action, $sLang = null) {
 		// Если пользователь запросил action по умолчанию
 		$sPage = ($action == 'default')
 			? self::getInstance()->aConfigRoute['config']['action_default']
@@ -459,7 +498,12 @@ class Router extends LsObject {
 
 		// Смотрим, есть ли правило rewrite
 		$sPage = self::getInstance()->Rewrite($sPage);
-		return rtrim(Config::Get('path.root.web'),'/')."/$sPage/";
+		/*         * *********************** Plugin L10n *************************** */
+        // return rtrim(Config::Get('path.root.web'),'/')."/$sPage/";
+        if (!$sLang)
+            $sLang = self::getLang();
+        return rtrim(Config::Get('path.root.web'), '/') . ($sLang ? "/{$sLang}" : '') . "/$sPage/";
+        /*         * **************************************************************** */
 	}
 	/**
 	 * Try to find rewrite rule for given page.
