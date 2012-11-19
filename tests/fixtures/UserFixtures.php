@@ -21,6 +21,7 @@ class UserFixtures extends AbstractFixtures
         $oUserThird = $this->_createUser('user_third', 'qwerty','user_third@info.com', '2012-11-2 09:20:50');
         $this->addReference('user-third', $oUserThird);
 
+        $oUserFirst->getId();
         $oUserFirst->setProfileName('UserFirst FullName');
         $oUserFirst->setProfileAbout('...  UserFirst profile description');
         $oUserFirst->setProfileSex('man');
