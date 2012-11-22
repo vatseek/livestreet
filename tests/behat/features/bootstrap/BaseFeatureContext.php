@@ -16,7 +16,7 @@ require_once("tests/LoadFixtures.php");
 /**
  * LiveStreet custom feature context
  */
-class BaseFeatureContext extends MinkContext
+class BaseFeatureContext extends BehatContext
 {
 
     protected static $fixturesLoader = null;
@@ -32,6 +32,11 @@ class BaseFeatureContext extends MinkContext
         }
 
         return self::$fixturesLoader;
+    }
+
+    public function getMinkContext()
+    {
+        return $this->getMainContext();
     }
 
     /**
@@ -60,10 +65,19 @@ class BaseFeatureContext extends MinkContext
     /**
      * @Given /^I am activated plugin "([^"]*)"$/
      */
-    public function ActivatedPlugin($plugin)
+    public function ActivatedPlugin($sPlugin)
     {
         $pluginActivation =  new LoadFixtures();
-        $pluginActivation->activationPlugin($plugin);
+        $pluginActivation->activationPlugin($sPlugin);
+    }
+
+    /**
+     * @Given /^I am deactivate plugin "([^"]*)"$/
+     */
+    public function DeactivatedPlugin($sPlugin)
+    {
+        $pluginActivation =  new LoadFixtures();
+        $pluginActivation->deactivatePlugin($sPlugin);
     }
 
     /**
@@ -71,7 +85,21 @@ class BaseFeatureContext extends MinkContext
      */
     public function iWait($time_wait)
     {
-        $this->getSession()->wait($time_wait);
+        $this->getMinkContext()->getSession()->wait($time_wait);
+    }
+
+
+    /**
+     * @Then /^I want to login administrator$/
+     */
+    public function iWantToLoginAdministrator()
+    {
+        // Заполняем форму
+        $this->getMinkContext()->getSession()->getPage()->findById("login")->setValue("admin@admin.adm");
+        $this->getMinkContext()->getSession()->getPage()->findById("password")->setValue("qwerty");
+
+        // Сабмитим форму
+        $this->pressButton("login-form-submit");
     }
 
 }
