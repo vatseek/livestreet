@@ -28,9 +28,8 @@ class LoadFixtures
      */
     private $sDirFixtures;
 
-    public function __construct() {
-        $this->oEngine = Engine::getInstance();
-        $this->oEngine->Init();
+    public function __construct($oEngine) {
+        $this->oEngine = $oEngine;
         $this->sDirFixtures = realpath((dirname(__FILE__)) . "/fixtures/");
     }
 
@@ -153,7 +152,7 @@ class LoadFixtures
      * @return void
      */
     public function loadPluginFixtures($plugin) {
-        $sPath = Config::Get('path.root.server') . '/plugins/' . $plugin . '/tests/behat/fixtures';
+        $sPath = Config::Get('path.root.server') . '/plugins/' . $plugin . '/tests/fixtures';
         if (!is_dir($sPath)) {
             throw new InvalidArgumentException('Plugin not found by LS directory: ' . $sPath, 10);
         }
@@ -162,28 +161,5 @@ class LoadFixtures
         $this->loadFixtures();
         echo "Load Fixture Plugin ... ---> {$plugin}\n";
     }
-
-    /**
-     * Function of activate plugin
-     *
-     * @param string $plugin
-     */
-    public function activationPlugin($plugin){
-        $result = $this->oEngine->ModulePlugin_Toggle($plugin,'activate');
-        return $result;
-
-    }
-
-    /**
-     * Function of deactivate plugin
-     *
-     * @param string $plugin
-     */
-    public function deactivatePlugin($plugin){
-        $result = $this->oEngine->ModulePlugin_Toggle($plugin,'deactivate');
-        return $result;
-
-    }
-
 }
 
