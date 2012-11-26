@@ -20,13 +20,13 @@ require_once("tests/LoadFixtures.php");
 class BaseFeatureContext extends MinkContext
 {
     protected $fixturesLoader = NULL;
-    protected $oEngine;
+    protected $oEngine = NULL;
 
-    public function __construct() {
-        $this->oEngine = Engine::getInstance();
-        $this->oEngine->Init();
-
-        $this->oEngine->Cache_Clean();
+    public function initEngine() {
+        if (!$this->oEngine) {
+            $this->oEngine = Engine::getInstance();
+            $this->oEngine->Init();
+        }
     }
 
     /**
@@ -36,6 +36,7 @@ class BaseFeatureContext extends MinkContext
      */
     public function prepare($event)
     {
+        $this->initEngine();
         $fixturesLoader = $this->getFixturesLoader();
         $fixturesLoader->purgeDB();
         $fixturesLoader->load();
