@@ -21,7 +21,7 @@
  * @package modules.topic
  * @since 1.0
  */
-class ModuleFilm extends Module {
+class ModuleCategory extends Module {
 
 	protected $oFilmMapper;
 	protected $oUserCurrent=null;

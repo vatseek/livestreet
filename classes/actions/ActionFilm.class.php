@@ -40,8 +40,6 @@ class ActionFilm extends Action {
 	protected function RegisterEvent() {
 		$this->AddEvent('add','EventAdd');
 		$this->AddEventPreg('/^view$/', '/^(([0-9a-z-]{2,100}).html)$/i', 'EventView');
-		$this->AddEventPreg('/^published$/i','/^(page([1-9]\d{0,5}))?$/i','EventShowTopics');
-		$this->AddEventPreg('/^saved$/i','/^(page([1-9]\d{0,5}))?$/i','EventShowTopics');
 		$this->AddEvent('edit','EventEdit');
 		$this->AddEvent('delete','EventDelete');
 	}
@@ -49,15 +47,13 @@ class ActionFilm extends Action {
     protected function EventView()
     {
         $sFilmId = $this->GetParamEventMatch(0,2);
-        if (!$sFilmId) {
-            return Router::Action('error');
+        if (!$sFilmId || !$oFilm = $this->Film_GetFilmByUrl($sFilmId)) {
+            return Router::Action('error','404');
         }
 
-        if ($oFilm = $this->Film_GetFilmByUrl($sFilmId)) {
+        $this->Viewer_Assign('oFilm', $oFilm);
 
-        }
-
-        $this->SetTemplate(false);
+        $this->SetTemplateAction('view');
     }
 
 

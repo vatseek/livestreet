@@ -21,7 +21,7 @@
  * @package modules.topic
  * @since 1.0
  */
-class ModuleFilm_MapperFilm extends Mapper {
+class ModuleFilm_MapperCategory extends Mapper {
 
     public function GetFilmByUrl($sFilmUrl)
     {

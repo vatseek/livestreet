@@ -368,6 +368,8 @@ $config['db']['table']['geo_city']            = '___db.table.prefix___geo_city';
 $config['db']['table']['geo_target']          = '___db.table.prefix___geo_target';
 $config['db']['table']['user_changemail']     = '___db.table.prefix___user_changemail';
 
+$config['db']['table']['film']     = '___db.table.prefix___film';
+
 $config['db']['tables']['engine'] = 'InnoDB';  // InnoDB или MyISAM
 /**
  * Настройка memcache
